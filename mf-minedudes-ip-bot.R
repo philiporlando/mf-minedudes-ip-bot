@@ -43,7 +43,7 @@ tryCatch(
       saveRDS(current_ip, ip_file)
       previous_ip <- current_ip
     } else {
-      previous_ip <- readRDS("ip.RDS")
+      previous_ip <- readRDS(ip_file)
       logger::log_info("Previous IP: {previous_ip}")
     }
 
@@ -63,6 +63,9 @@ tryCatch(
       logger::log_info("Sending message: {msg}")
       discordr::send_webhook_message(msg)
     }
+    
+    logger::log_success("The MF MINEDUDES IP bot script completed successfully!")
+    
   },
   error = function(e) {
     send_log <<- TRUE
