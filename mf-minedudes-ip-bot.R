@@ -65,9 +65,8 @@ tryCatch(
     } else {
       logger::log_info("No changes were detected between the current and previous IP.")
     }
-    
+
     logger::log_success("The MF MINEDUDES IP bot script completed successfully!")
-    
   },
   error = function(e) {
     send_log <<- TRUE
