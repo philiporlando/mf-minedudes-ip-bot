@@ -7,7 +7,7 @@ if (!require(pacman)) {
 pacman::p_load(purrr, magrittr, glue, logger, discordr)
 
 # Set up logger ----------------------------------------------------------------
-log_file <- file.path("./log", glue::glue("{Sys.Date()}-ip-bot.log"))
+log_file <- file.path("./log", glue::glue("{Sys.Date()}-mf-minedudes-ip-bot.log"))
 logger::log_appender(appender = appender_tee(log_file))
 
 # Set global variables ---------------------------------------------------------
