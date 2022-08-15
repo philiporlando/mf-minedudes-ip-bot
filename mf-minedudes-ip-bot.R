@@ -62,6 +62,8 @@ tryCatch(
       msg <- glue::glue("The IP address to the MF MINEDUDES server has changed from {previous_ip}:{port} to {current_ip}:{port}")
       logger::log_info("Sending message: {msg}")
       discordr::send_webhook_message(msg)
+      # Checkpoint the new IP
+      saveRDS(current_ip, ip_file)
     } else {
       logger::log_info("No changes were detected between the current and previous IP.")
     }
