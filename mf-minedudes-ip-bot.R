@@ -74,7 +74,6 @@ tryCatch(
   },
   warning = function(w) {
     logger::log_warn("Warning(s) occurred with the MF MINEDUDES IP bot script!")
-    logger::log_trace("{w}")
   },
   finally = {
     if (send_log) {
