@@ -13,7 +13,7 @@ logger::log_appender(appender = appender_tee(log_file))
 # Set global variables ---------------------------------------------------------
 webhook <- Sys.getenv("MF_MINEDUDES_WEBHOOK")
 username <- Sys.getenv("MF_MINEDUDES_USER")
-port <- Sys.getenv("MF_MINEDUES_PORT")
+port <- Sys.getenv("MF_MINEDUDES_PORT")
 ip_file <- "./data/ip.RDS"
 send_log <- FALSE
 
