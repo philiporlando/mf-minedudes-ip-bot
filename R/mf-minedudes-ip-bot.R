@@ -6,13 +6,29 @@ if (!require(pacman)) {
 
 pacman::p_load(lubridate, purrr, magrittr, glue, logger, discordr)
 
-# Set up logger ----------------------------------------------------------------
+# Set global variables ---------------------------------------------------------
+webhook <- Sys.getenv("MF_MINEDUDES_WEBHOOK")
+username <- Sys.getenv("MF_MINEDUDES_USER")
+port <- Sys.getenv("MF_MINEDUDES_PORT")
+ip_file <- "./data/ip.RDS"
+send_log <- FALSE
 today <- lubridate::today()
 log_suffix <- "mf-minedudes-ip-bot.log"
+log_dir <- "./log"
+log_file <- file.path("./log", glue::glue("{today}-{log_suffix}"))
+
+# Define helper functions ------------------------------------------------------
+validate_ip <- function(ip) {
+  valid <- grepl("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", ip)
+  if (!valid) {
+    logger::log_fatal("Invalid IP detected: {ip}")
+    stop()
+  }
+}
 
 # Define helper to remove old log files
 remove_old_logs <- function(
-    today, n_days = 7, log_dir = "./log", log_suffix) {
+    today, n_days = 7, log_dir = log_dir, log_suffix) {
   
   # Determine date from n_days ago
   start_date <- today - lubridate::days(n_days)
@@ -32,40 +48,25 @@ remove_old_logs <- function(
   
   # Identify logs that are older than n_days
   old_logs <- logs[!
-    grepl(
-      pattern = paste("^", days, collapse = "|", sep = ""),
-      x = basename(logs)
-      )
-    ]
+                     grepl(
+                       pattern = paste("^", days, collapse = "|", sep = ""),
+                       x = basename(logs)
+                     )
+  ]
   
   # Remove log files that are older than n_days
   file.remove(old_logs)
 }
 
+# Set up logger ----------------------------------------------------------------
+
 # Call the remove old log file helper
 remove_old_logs(today = today, log_suffix = log_suffix)
 
 # Create/append today's log file
-log_file <- file.path("./log", glue::glue("{today}-{log_suffix}"))
 logger::log_appender(appender = appender_tee(log_file))
 
-# Set global variables ---------------------------------------------------------
-webhook <- Sys.getenv("MF_MINEDUDES_WEBHOOK")
-username <- Sys.getenv("MF_MINEDUDES_USER")
-port <- Sys.getenv("MF_MINEDUDES_PORT")
-ip_file <- "./data/ip.RDS"
-send_log <- FALSE
-
-# Define helper functions ------------------------------------------------------
-validate_ip <- function(ip) {
-  valid <- grepl("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", ip)
-  if (!valid) {
-    logger::log_fatal("Invalid IP detected: {ip}")
-    stop()
-  }
-}
-
-# Compare current public IP to the previous one --------------------------------
+# Main -------------------------------------------------------------------------
 tryCatch(
   {
 
