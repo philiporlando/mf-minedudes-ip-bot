@@ -27,33 +27,31 @@ validate_ip <- function(ip) {
 }
 
 # Define helper to remove old log files
-remove_old_logs <- function(
-    today, n_days = 7, log_dir = log_dir, log_suffix) {
-  
+remove_old_logs <- function(today, n_days = 7, log_dir = log_dir, log_suffix) {
+
   # Determine date from n_days ago
   start_date <- today - lubridate::days(n_days)
-  
+
   # Determine today's date
   end_date <- today
-  
+
   # Create sequence of dates between start and end date
   days <- seq(start_date, end_date, by = "days")
-  
+
   # Create list of all log files
   logs <- list.files(
     path = log_dir,
     pattern = paste0("^\\d{4}\\-\\d{2}\\-\\d{2}\\-", log_suffix),
     full.names = TRUE
   )
-  
+
   # Identify logs that are older than n_days
   old_logs <- logs[!
-                     grepl(
-                       pattern = paste("^", days, collapse = "|", sep = ""),
-                       x = basename(logs)
-                     )
-  ]
-  
+  grepl(
+    pattern = paste("^", days, collapse = "|", sep = ""),
+    x = basename(logs)
+  )]
+
   # Remove log files that are older than n_days
   file.remove(old_logs)
 }
@@ -69,9 +67,8 @@ logger::log_appender(appender = appender_tee(log_file))
 # Main -------------------------------------------------------------------------
 tryCatch(
   {
-
     logger::log_info("Starting the MF MINEDUDES IP bot script.")
-    
+
     # Retrieve current public IP from opendns.com
     current_ip <- system(
       "dig +short myip.opendns.com @resolver1.opendns.com",
