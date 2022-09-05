@@ -27,7 +27,7 @@ validate_ip <- function(ip) {
 }
 
 # Define helper to remove old log files
-remove_old_logs <- function(today, n_days = 7, log_dir = log_dir, log_suffix) {
+remove_old_logs <- function(today, n_days = 7, log_dir, log_suffix) {
 
   # Determine date from n_days ago
   start_date <- today - lubridate::days(n_days)
@@ -59,7 +59,9 @@ remove_old_logs <- function(today, n_days = 7, log_dir = log_dir, log_suffix) {
 # Set up logger ----------------------------------------------------------------
 
 # Call the remove old log file helper
-remove_old_logs(today = today, log_suffix = log_suffix)
+remove_old_logs(
+  today = today, n_days = 7, log_dir = log_dir, log_suffix = log_suffix
+  )
 
 # Create/append today's log file
 logger::log_appender(appender = appender_tee(log_file))
