@@ -13,6 +13,7 @@ port <- Sys.getenv("MF_MINEDUDES_PORT")
 ip_file <- "./data/ip.RDS"
 send_log <- FALSE
 today <- lubridate::today()
+n_days <- 7
 log_suffix <- "mf-minedudes-ip-bot.log"
 log_dir <- "./log"
 log_file <- file.path("./log", glue::glue("{today}-{log_suffix}"))
@@ -60,7 +61,7 @@ remove_old_logs <- function(today, n_days = 7, log_dir, log_suffix) {
 
 # Call the remove old log file helper
 remove_old_logs(
-  today = today, n_days = 7, log_dir = log_dir, log_suffix = log_suffix
+  today = today, n_days = n_days, log_dir = log_dir, log_suffix = log_suffix
   )
 
 # Create/append today's log file
