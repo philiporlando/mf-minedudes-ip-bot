@@ -105,7 +105,7 @@ tryCatch(
         set_default = TRUE
       )
       # Send message
-      msg <- glue::glue("The IP address to the MF MINEDUDES server has changed from {previous_ip}:{port} to {current_ip}:{port}")
+      msg <- glue::glue("The IP address to the MF MINEDUDES server is {current_ip}:{port}")
       logger::log_info("Sending message: {msg}")
       discordr::send_webhook_message(msg)
       # Checkpoint the new IP
