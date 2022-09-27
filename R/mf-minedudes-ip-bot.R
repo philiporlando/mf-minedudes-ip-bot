@@ -9,6 +9,7 @@ pacman::p_load(lubridate, purrr, magrittr, glue, logger, discordr)
 # Set global variables ---------------------------------------------------------
 webhook <- Sys.getenv("MF_MINEDUDES_WEBHOOK")
 username <- Sys.getenv("MF_MINEDUDES_USER")
+channel <- Sys.getenv("MF_MINEDUDES_CHANNEL")
 port <- Sys.getenv("MF_MINEDUDES_PORT")
 ip_file <- "./data/ip.RDS"
 send_log <- FALSE
@@ -98,7 +99,10 @@ tryCatch(
       # Connect to discord channel
       logger::log_info("Connecting to discord channel.")
       con <- discordr::create_discord_connection(
-        webhook = webhook, username = username, set_default = TRUE
+        webhook = webhook, 
+        username = username, 
+        channel_name = channel,
+        set_default = TRUE
       )
       # Send message
       msg <- glue::glue("The IP address to the MF MINEDUDES server has changed from {previous_ip}:{port} to {current_ip}:{port}")
