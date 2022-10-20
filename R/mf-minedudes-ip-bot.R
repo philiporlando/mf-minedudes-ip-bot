@@ -1,10 +1,16 @@
-# Load dependencies ------------------------------------------------------------
+# Load CRAN dependencies -------------------------------------------------------
 if (!require(pacman)) {
   install.packages("pacman")
   library(pacman)
 }
 
-pacman::p_load(lubridate, purrr, magrittr, glue, logger, discordr)
+pacman::p_load(lubridate, purrr, magrittr, glue, logger, devtools)
+
+# Load GitHub dependencies -----------------------------------------------------
+if (!require(discordr)) {
+  devtools::install_github("EriqLaplus/discordr")
+  library(discordr)
+}
 
 # Set global variables ---------------------------------------------------------
 webhook <- Sys.getenv("MF_MINEDUDES_WEBHOOK")
