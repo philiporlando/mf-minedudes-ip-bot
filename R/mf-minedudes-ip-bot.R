@@ -1,17 +1,3 @@
-# Load CRAN dependencies -------------------------------------------------------
-if (!require(pacman)) {
-  install.packages("pacman")
-  library(pacman)
-}
-
-pacman::p_load(lubridate, purrr, magrittr, glue, logger, devtools)
-
-# Load GitHub dependencies -----------------------------------------------------
-if (!require(discordr)) {
-  devtools::install_github("EriqLaplus/discordr")
-  library(discordr)
-}
-
 # Set global variables ---------------------------------------------------------
 webhook <- Sys.getenv("MF_MINEDUDES_WEBHOOK")
 username <- Sys.getenv("MF_MINEDUDES_USER")
@@ -72,7 +58,7 @@ remove_old_logs(
   )
 
 # Create/append today's log file
-logger::log_appender(appender = appender_tee(log_file))
+logger::log_appender(appender = logger::appender_tee(log_file))
 
 # Main -------------------------------------------------------------------------
 tryCatch(
@@ -81,7 +67,7 @@ tryCatch(
 
     # Retrieve current public IP from opendns.com
     current_ip <- system(
-      "dig +short myip.opendns.com @resolver1.opendns.com",
+      "curl -4 ifconfig.me",
       intern = TRUE
     )
     logger::log_info("Current IP: {current_ip}")
@@ -105,11 +91,17 @@ tryCatch(
       # Connect to discord channel
       logger::log_info("Connecting to discord channel.")
       con <- discordr::create_discord_connection(
-        webhook = webhook, 
+        webhook, 
         username = username, 
         channel_name = channel,
         set_default = TRUE
       )
+
+      if (is.null(con$webhook) || con$webhook == "") {
+        logger::log_error("Error: MF_MINEDUDES_WEBHOOK environment variable is not set or empty.")
+        stop()
+      }
+
       # Send message
       msg <- glue::glue("The IP address to the MF MINEDUDES server is {current_ip}:{port}")
       logger::log_info("Sending message: {msg}")
