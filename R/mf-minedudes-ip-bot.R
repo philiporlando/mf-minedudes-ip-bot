@@ -4,7 +4,6 @@ username <- Sys.getenv("MF_MINEDUDES_USER")
 channel <- Sys.getenv("MF_MINEDUDES_CHANNEL")
 port <- Sys.getenv("MF_MINEDUDES_PORT")
 ip_file <- "./data/ip.RDS"
-send_log <- FALSE
 today <- lubridate::today()
 n_days <- 7
 log_suffix <- "mf-minedudes-ip-bot.log"
@@ -115,20 +114,14 @@ tryCatch(
     logger::log_success("The MF MINEDUDES IP bot script completed successfully!")
   },
   error = function(e) {
-    send_log <<- TRUE
     logger::log_error("Error(s) occured with the MF MINEDUDES IP bot script!")
     logger::log_trace("{e}")
+    con <- discordr::create_discord_connection(
+      webhook = webhook, username = username, set_default = TRUE
+    )
+    discordr::send_webhook_file(filename = log_file, conn = con)
   },
   warning = function(w) {
     logger::log_warn("Warning(s) occurred with the MF MINEDUDES IP bot script!")
-  },
-  finally = {
-    if (send_log) {
-      con <- discordr::create_discord_connection(
-        webhook = webhook, username = username, set_default = TRUE
-      )
-      discordr::send_webhook_file(filename = log_file, conn = con)
-    }
-    send_log <<- FALSE
   }
 )
