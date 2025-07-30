@@ -129,5 +129,6 @@ tryCatch(
       )
       discordr::send_webhook_file(filename = log_file, conn = con)
     }
+    send_log <<- FALSE
   }
 )
