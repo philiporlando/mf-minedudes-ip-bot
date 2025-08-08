@@ -116,10 +116,6 @@ tryCatch(
   error = function(e) {
     logger::log_error("Error(s) occured with the MF MINEDUDES IP bot script!")
     logger::log_trace("{e}")
-    con <- discordr::create_discord_connection(
-      webhook = webhook, username = username, set_default = TRUE
-    )
-    discordr::send_webhook_file(filename = log_file, conn = con)
   },
   warning = function(w) {
     logger::log_warn("Warning(s) occurred with the MF MINEDUDES IP bot script!")
